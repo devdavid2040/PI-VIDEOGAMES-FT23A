@@ -389,3 +389,33 @@ router.get('/', async(req, res) =>
 
 
 module.exports = router;
+
+
+
+//--------
+/* preguntar */
+//devuelve en un solo array todos los juegos de la API, logrando agrupar los resultados de los multiples pedidos de la API, de forma personaizada para la ruta principal.
+const allGamesAPI=()=>{
+  let all=[];
+  let urls = [
+    `https://api.rawg.io/api/games?key=${API_KEY}`,
+    `https://api.rawg.io/api/games?key=${API_KEY}&page=2`,
+    `https://api.rawg.io/api/games?key=${API_KEY}&page=3`,
+    `https://api.rawg.io/api/games?key=${API_KEY}&page=4`,
+    `https://api.rawg.io/api/games?key=${API_KEY}&page=5`
+  ]
+  let requests = urls.map(url =>axios.get(url) )  
+      Promise.all(requests)
+      .then(responses => 
+        {
+         all=responses.map(response=>gamesAPI(response.data.results))
+         /* console.log(all.flat().length) */ //100
+          /* console.log(   (gamesAPI(responses[0].data.results)).length   ) */ //20
+
+  /*       return all.flat() */ 
+      }
+      )
+ 
+}
+
+
