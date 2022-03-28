@@ -63,7 +63,12 @@ User.init({
     username: 'janedoe',
     birthday: new Date(1980, 6, 20)
   });
-  console.log(jane.toJSON());
+  /* console.log(jane.toJSON()); */
+
+const user=User.findAll();
+console.log(user.toJSON());
+
+
 
 
   try {
