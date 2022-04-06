@@ -6,12 +6,12 @@ module.exports = (sequelize) => {
 /*
 7 atributos:   
 ID: *
-Description *
-Image:
-Name *
-Platforms *
-Rating
-Release date
+description *
+image:
+name *
+platforms *
+rating
+releaseDate
  */
   sequelize.define('videogame', {
     id:{

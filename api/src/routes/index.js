@@ -10,28 +10,11 @@ const router = Router();
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
 
-/* results representa un solo array, resultado de un solo request  ARRAY DEa la APi GAME */
-/* DEVUELVO UN ARRAY DE OBJETOS GAME PRSONALIZADO, CONTENIENDO SOLAMENTE LOS DATOS NECESARIOS PARA LA RUTA PRINCIPAL */
-const gamesAPI=(results)=>{
-        const response=results.map(attr => {
-        return{
-          id:attr.id,
-          genre:attr.genres.map(indice=>indice.name),
-          image:attr.background_image,
-          name: attr.name
-            };
-    }
-        )
-       return response
-  }
 
 
-/* preguntar */
-//devuelve en un solo array todos los juegos de la API, logrando agrupar los resultados de los multiples pedidos de la API, de forma personaizada para la ruta principal.
-const allGames=async()=>{
-  //version async await funciona
-  /* const db =await Videogame.findAll({
-    attributes: ['id', 'image','name'],
+const getDbInfo = async () => {
+  return await Videogame.findAll({
+    attributes: ['id', 'image','name','rating'],
     include: {
       model: Genre,
       attributes: ["name"],
@@ -40,7 +23,10 @@ const allGames=async()=>{
       },
     },
   });
-  
+}
+
+//devuelve en un solo array todos los juegos de la API, logrando agrupar los resultados de los multiples pedidos de la API, de forma personaizada para la ruta principal.
+const getApiInfo=async()=>{
   let urls = [
     `https://api.rawg.io/api/games?key=${API_KEY}`,
     `https://api.rawg.io/api/games?key=${API_KEY}&page=2`,
@@ -49,104 +35,241 @@ const allGames=async()=>{
     `https://api.rawg.io/api/games?key=${API_KEY}&page=5`
   ]
   let requests = urls.map(url =>axios.get(url) )  
-      let alls=await Promise.all(requests)
-         let result=alls.map(response=>gamesAPI(response.data.results))
-
-        return [...db, ...result.flat()]
-      } */
-      
- 
-//----
-//version Promises
-let all;
-const db =await Videogame.findAll({
-  attributes: ['id', 'image','name'],
-  include: {
-    model: Genre,
-    attributes: ["name"],
-    through: {
-      attributes: [],
-    },
-  },
-});
-
-  let urls = [
-    `https://api.rawg.io/api/games?key=${API_KEY}`,
-    `https://api.rawg.io/api/games?key=${API_KEY}&page=2`,
-    `https://api.rawg.io/api/games?key=${API_KEY}&page=3`,
-    `https://api.rawg.io/api/games?key=${API_KEY}&page=4`,
-    `https://api.rawg.io/api/games?key=${API_KEY}&page=5`
-  ]
-  let requests = urls.map(url =>axios.get(url) )  
-      Promise.all(requests)
+       let res =await Promise.all(requests)
       .then(responses => 
         {
-         all=responses.map(response=>gamesAPI(response.data.results))
-        return [...db, ...all.flat()]
+          return responses.map(response=>getRequestAPI(response.data.results))
 
         }
       ).catch(err => console.log(err))
-       
-}
-
-
-
-router.get('/', async(req, res) => 
-{
  
+       if(res){  return res.flat()}
+    }
 
-  //version Promises funciona
-  /* let urls = [
-    `https://api.rawg.io/api/games?key=${API_KEY}`,
-    `https://api.rawg.io/api/games?key=${API_KEY}&page=2`,
-    `https://api.rawg.io/api/games?key=${API_KEY}&page=3`,
-    `https://api.rawg.io/api/games?key=${API_KEY}&page=4`,
-    `https://api.rawg.io/api/games?key=${API_KEY}&page=5`
-  ]
-  let requests = urls.map(url =>axios.get(url) )  
-      Promise.all(requests)
-      .then(responses => 
-        {
-        let all=responses.map(response=>gamesAPI(response.data.results))
-        res.json([...db, ...all.flat()])
 
-        }
-      )  */
+/* result representa un solo array, resultado de un solo request  ARRAY DEa la APi GAME */
+/* DEVUELVO UN ARRAY DE OBJETOS GAME PRSONALIZADO, CONTENIENDO SOLAMENTE LOS DATOS NECESARIOS PARA LA RUTA PRINCIPAL */
+const getRequestAPI=(result)=>{
+        const response=result.map(attr => {
+        return{
+          id:attr.id,
+          genre:attr.genres.map(indice=>indice.name),
+          image:attr.background_image,
+          name: attr.name,
+          rating: attr.rating
+            };
+    }
+        )
+       return response
+  }
 
-//version async await funciona
- /*      let urls = [
-        `https://api.rawg.io/api/games?key=${API_KEY}`,
-        `https://api.rawg.io/api/games?key=${API_KEY}&page=2`,
-        `https://api.rawg.io/api/games?key=${API_KEY}&page=3`,
-        `https://api.rawg.io/api/games?key=${API_KEY}&page=4`,
-        `https://api.rawg.io/api/games?key=${API_KEY}&page=5`
-      ]
 
-      let requests = urls.map(url =>axios.get(url) )  
-          let alls= await Promise.all(requests)
-         let result= alls.map(response=>gamesAPI(response.data.results))
-          res.json([...db, ...result.flat()])
+  const getAllGames = async () => {
+    const apiInfo = await getApiInfo()
+    const dbInfo = await getDbInfo()
+    const infoTotal =[...dbInfo,...apiInfo]
+    return infoTotal
+  }
+
+
+
+
+  const dataAPICountry=async()=>{
+    try{  
+      const url ="https://restcountries.com/v2/all";
+          
+          const countriesUrl = await axios(url)
+          const response=countriesUrl.data.map(attr => {
+          return{
+              code: attr.alpha3Code,
+              name: attr.name,
+              flag: attr.flag,
+              population: attr.population,
+              region: attr.region, 
+              };
+      }
+          )
+         return response
+    }
+      catch(error){console.log(error)}
+    }
+
+    
+
+    const getDataAPIGenre=async()=>{
+      try{  
+        const url =`https://api.rawg.io/api/genres?key=${API_KEY}`;
+            
+            const genresUrl = await axios(url)
+            const response=genresUrl.data.results.map(attr => {
+            return{
+                name: attr.name 
+                };
+              }
+            )
+            await Genre.bulkCreate(response)
+
+           return Genre.findAll()
+      }
+        catch(error){console.log(error)}
+      }
+  
+
+/* filtrar por género 
+filtrar por videojuego existente o agregado por nosotros
+
+ordenar tanto ascendentemente como descendentemente los videojuegos por orden alfabético 
+ordenar tanto ascendentemente como descendentemente los videojuegos por rating
  */
 
-          await allGames().then(resp=> { if(resp)console.log(resp)  }) 
-/* res.json(await allGames()) */ //funciona bien solamente con async await funcion auxiliar
-      
+router.get('/videogames', async(req, res) => 
+{
+
+if(req.query.name)
+{
+ let result=await (await getAllGames()).filter(attr=>attr.name.toLowerCase().includes(req.query.name.toLowerCase())) 
+return res.json(result)
+}
+return res.json(await getAllGames())
+
 })
 
-/* if(req.query.name){
-  try{
-      let country=await Country.findAll({
-          where:{
-              name:{
-                  [Op.iLike]:'%'+req.query.name+'%'
-              }
-          }
+//estilo diego
+router.get('/videogame/:gameId', async(req, res) => 
+{
+  try {
+    const response = await axios.get(`https://api.rawg.io/api/games/${req.params.gameId}?key=${API_KEY}`)
+
+
+    let game={
+      id: response.data.id,
+      genre:response.data.genres.map(indice=>indice.name),
+      image:response.data.background_image,
+      name: response.data.name,
+      description: response.data.description,
+      platforms:response.data.platforms.map(indice=>indice.platform.name),
+      rating:response.data.rating,
+      releaseDate:response.data.released
+    }
+
+    res.json(game)
+  } catch (error) {
+    
+    if(error.response?.status === 404) {
+      Videogame.findByPk(req.params.gameId).then(videogame => {
+        if(videogame) return res.json(videogame)
+        return res.sendStatus(404)
       })
-      return res.json(country);
+    } else {
+      res.status(500).json({ error: 'Ups!!! 😱' })
+    }
   }
-  catch(error){
-      console.log(error)
-  }
-}  */
+  
+})
+
+
+//facil
+router.get('/genres', async(req, res) => 
+{
+
+   res.json(await getDataAPIGenre())
+
+})
+
+
+
+/* datos de prueba
+{"difficulty": 1,"duration": 1,"name": "Ski","season": "Autumn", "countryid":["ARG","AFG","ALA"]} 
+{"difficulty": 3,"duration": 3,"name": "Voley","season": "Spring", "countryid":["ARG"]}  
+{"difficulty": 2,"duration": 2,"name": "Rafting","season": "Spring", "countryid":["ALB"]} 
+ */
+
+/* router.post("/activity", async (req, res)=>{
+  const activity=req.body
+try { 
+       let [act]=await Activity.findOrCreate({
+           where:{
+               difficulty:activity.difficulty,
+               duration:activity.duration,
+               name:activity.name,
+               season:activity.season
+           }
+       })
+
+await act.setCountries(activity.countryid)
+       return res.json(act);
+
+   } catch (error) {
+       console.log(error);
+   }
+}) */
+
+
+/* datos de prueba
+{"description": "AAA","image": "111","name": "ZZZ","platforms": ["Action","Adventure","RPG"], "rating": 4.45,"releaseDate": "2013-09-15","genreid":[1,2,3]}
+
+{"description": "BBB","image": "222","name": "XXX","platforms": ["Shooter","Puzzle","Massively Multiplayer"], "rating" 4.46,"releaseDate": "2013-09-16","genreid":[1]} 
+
+{"description": "CCC","image": "333","name": "CCC","platforms": ["Action","Adventure","Massively Multiplayer"], "rating": 4.47,"releaseDate": "2013-09-17","genreid":[4]} 
+ */
+router.post('/videogame', async(req, res) => 
+{
+  const videogame=req.body
+  try { 
+         let [game]=await Videogame.findOrCreate({
+             where:{
+              description: videogame.description,
+              image: videogame.image,
+              name: videogame.name,
+              platforms: videogame.platforms,
+              rating: videogame.rating,
+              releaseDate: videogame.releaseDate
+             }
+         })
+  
+  await game.setGenres(videogame.genreid)
+         return res.json(game);
+  
+     } catch (error) {
+         console.log(error);
+     }
+
+})
+
+/* 
+[
+  {
+    "id": "88655024-f742-4dc6-9671-6df1467f34b7",
+    "image": "111",
+    "name": "ZZZ",
+    "rating": 4.45,
+    "genres": [
+      {
+        "name": "Action"
+      },
+      {
+        "name": "Indie"
+      },
+      {
+        "name": "Adventure"
+      }
+    ]
+  },
+  {
+    "id": 3498,
+    "genre": [
+      "Action",
+      "Adventure"
+    ],
+    "image": "https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg",
+    "name": "Grand Theft Auto V",
+    "rating": 4.47
+  } */
+
+
+
+
+
+
 
 module.exports = router;

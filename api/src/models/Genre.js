@@ -9,11 +9,11 @@ ID:
 Name 
  */
 sequelize.define('genre', {
-    id:{
+    /* id:{
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
-    },
+    }, */
     name:{
       type: DataTypes.STRING,
     },
