@@ -43,6 +43,7 @@ const sequelize = new Sequelize('test', 'postgres', 'test', {
   dialect: 'postgres',
   logging: false
 });
+
 //---
 class User extends Model {}
 User.init({
