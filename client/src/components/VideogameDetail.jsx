@@ -23,78 +23,36 @@ function VideogameDetail() {
 
     return (
     <div>
-{
-        loadingStatus?<h1>Cargando ...</h1>:        
+{loadingStatus ? (
+       <h1>Cargando ...</h1>
+      ) : (
         <div>
-          <p>{detailView.name}</p>
-         {/*  <p> {detailView.name} </p>
-             <img src={detailView.image} alt="img not found" width="400px" height="450px" /> 
-            <p> {detailView.rating} </p>
-            <p>Género: { detailView.genre.map( (genre) => genre+" / ") } </p> */}
-        </div>
-}
-
-      <NavLink to="/home">
-        <button>Volver</button>
-      </NavLink>
-    </div>
-    )
-  }
-
-
-export default VideogameDetail
-
-
-/* import React from "react";
-import { NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getVideogame, clearVideogame } from "../actions/index";
-import { useEffect } from "react";
-
-function VideogameDetail() {
-    return (
-      <React.Fragment>
-            <pre>Hola</pre>
-
-</React.Fragment>
-   )
-  }
-
-  export default VideogameDetail 
- */
-
-
-
-
-
-
-
-/* import React from "react";
-import { NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getDetail } from "../actions/index";
-import { useEffect } from "react";
-
-export default function Landing(props) {
-  console.log("ESTO ES EL ID??", props);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getDetail(props.match.params.id));
-  }, [dispatch]);
-  const myCharacter = useSelector((state) => state.detail);
-  return (
-    <div>
-      <h1>Soy detail en /home/:id</h1>
-      <div>
-        <h1>{myCharacter.name}</h1>
-        <img src={myCharacter.image} alt="" />
-        <h2>Status: {myCharacter.status}</h2>
+        <h1>{detailView.name}</h1>
+        <img src={detailView.image} alt="" />
+          <h4>Rating: {detailView.rating}</h4>
+          <h4>
+            Fecha de Lanzamiento: {detailView.releasedDate}
+          </h4>
+          <h4>
+            Plataformas: {detailView.platforms?.join(",  ")}
+          </h4>
+          <h4>
+            Generos: {detailView.genre?.join(",  ")}
+          </h4>
+          <h4>Descripción: </h4>
+          <p>
+            { detailView.description }
+          </p>
+        
+        <NavLink to="/home">
+          <button>Volver</button>
+        </NavLink>
       </div>
-
-      <NavLink to="/home">
-        <button>Volver</button>
-      </NavLink>
+        
+      )}
     </div>
   );
 }
- */
+  
+export default VideogameDetail
+

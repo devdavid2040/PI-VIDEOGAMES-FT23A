@@ -7,17 +7,20 @@ import {loadData} from "../actions/index"
 
 import { NavLink } from "react-router-dom";
 
-import SearchBar from "./SearchBar";
+import SearchBar from "./SearchBar"
 import VideogameCard from "./VideogameCard"
 
-/* import CharCard from "./CharCard";
-import SearchBar from "./SearchBar";
- */
+import Filter from "./Filter"
+import Order from "./Order"
+import Pagination from "./Pagination"
+
+
 
 function Home() {
 
     let dispatch = useDispatch()
-useEffect(() => {
+
+    useEffect(() => {
 dispatch(loadData())
 }, [])
 
@@ -32,6 +35,10 @@ const videogamesView = useSelector( (state)=>{
     return (
       <React.Fragment>
            <SearchBar />
+           {/* <Filter />
+           <Order /> */}
+
+           {/* <VideogameForm /> */}
             {
             
             loadingStatus?<h1>Cargando ...</h1>: videogamesView.map((videogame) => {
@@ -44,8 +51,12 @@ const videogamesView = useSelector( (state)=>{
                 );
               })
               
-            } 
+            }
+{/* <Pagination />  */}           
+
 </React.Fragment>
+
+
    )
   }
 

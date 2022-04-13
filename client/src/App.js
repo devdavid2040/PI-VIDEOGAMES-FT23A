@@ -20,7 +20,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Landing from "./components/Landing";
 import Home from "./components/Home";
 import VideogameDetail from "./components/VideogameDetail";
-import Chapter from "./components/Chapter";
+import VideogameForm from "./components/VideogameForm";
 import "./App.css";
 
 function App() {
@@ -31,7 +31,7 @@ function App() {
         <Switch>
         <Route path="/home/:idVideogame" component={VideogameDetail} />
         <Route path="/home" component={Home} />
-        <Route path="/chapter" component={Chapter} />
+        <Route path="/videogame" component={VideogameForm} />
         <Route path="/" component={Landing} /> 
         </Switch>
       </div>

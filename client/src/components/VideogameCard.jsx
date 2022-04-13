@@ -8,8 +8,6 @@ return(
     <div>
         <h3>{name}</h3>
         <h5>Rating: {rating}</h5>
-        {/* <h6>Género: {genre}</h6> */}
-        {/* <h6>Género: {<ul> genre.map( (genre) => <li>genre</li> )  </ul> } </h6> */}
         <h6>Género: { genre.map( (genre) => genre+" / ") } </h6>
         <img src={image} alt="img not found" width="200px" height="250px" />
 

@@ -5,8 +5,8 @@ let initialState={
     videogameList:[],
     loading: false,
     errorMessage: "",
-    videogameDetail:{}
-
+    videogameDetail:{},
+    videogameGenres:[]
 }
 
 
@@ -60,7 +60,14 @@ switch(type)
                 return {...state, 
                     errorMessage:payload}
         
-        
+        case actions.LOAD_VIDEOGAME_GENRES:
+            return {...state, 
+                videogameGenres:payload
+            }
+
+            case actions.LOAD_VIDEOGAME_GENRES_FAILURE:
+                return {...state, 
+                    errorMessage:payload}
 
         default: return state;
 }

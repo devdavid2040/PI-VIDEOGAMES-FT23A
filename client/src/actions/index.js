@@ -53,7 +53,7 @@ export function getVideogamesByName(name){
 }
 
 
-/* export function getGenres(){
+export function getGenres(){
   return (dispatch) => {
 
     let dataURL=`http://localhost:3001/genres`
@@ -64,7 +64,7 @@ export function getVideogamesByName(name){
       dispatch({ type: actions.LOAD_VIDEOGAME_GENRES_FAILURE, payload: error })
     })
   }
-} */
+}
 
 //-------------------------
 
