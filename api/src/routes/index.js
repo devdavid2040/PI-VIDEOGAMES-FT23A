@@ -72,30 +72,6 @@ const getRequestAPI=(result)=>{
   }
 
 
-
-
-  const dataAPICountry=async()=>{
-    try{  
-      const url ="https://restcountries.com/v2/all";
-          
-          const countriesUrl = await axios(url)
-          const response=countriesUrl.data.map(attr => {
-          return{
-              code: attr.alpha3Code,
-              name: attr.name,
-              flag: attr.flag,
-              population: attr.population,
-              region: attr.region, 
-              };
-      }
-          )
-         return response
-    }
-      catch(error){console.log(error)}
-    }
-
-    
-
     const getDataAPIGenre=async()=>{
       try{  
         const url =`https://api.rawg.io/api/genres?key=${API_KEY}`;
@@ -177,34 +153,6 @@ router.get('/genres', async(req, res) =>
 })
 
 
-
-/* datos de prueba
-{"difficulty": 1,"duration": 1,"name": "Ski","season": "Autumn", "countryid":["ARG","AFG","ALA"]} 
-{"difficulty": 3,"duration": 3,"name": "Voley","season": "Spring", "countryid":["ARG"]}  
-{"difficulty": 2,"duration": 2,"name": "Rafting","season": "Spring", "countryid":["ALB"]} 
- */
-
-/* router.post("/activity", async (req, res)=>{
-  const activity=req.body
-try { 
-       let [act]=await Activity.findOrCreate({
-           where:{
-               difficulty:activity.difficulty,
-               duration:activity.duration,
-               name:activity.name,
-               season:activity.season
-           }
-       })
-
-await act.setCountries(activity.countryid)
-       return res.json(act);
-
-   } catch (error) {
-       console.log(error);
-   }
-}) */
-
-
 /* datos de prueba
 {"description": "AAA","image": "111","name": "ZZZ","platforms": ["Action","Adventure","RPG"], "rating": 4.45,"releaseDate": "2013-09-15","genreid":[1,2,3]}
 
@@ -265,11 +213,6 @@ router.post('/videogame', async(req, res) =>
     "name": "Grand Theft Auto V",
     "rating": 4.47
   } */
-
-
-
-
-
 
 
 module.exports = router;

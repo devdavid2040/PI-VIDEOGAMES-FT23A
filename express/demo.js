@@ -1,3 +1,7 @@
+/* sudo -u postgres psql
+sudo -u postgres createdb X
+ */
+
 /* 6 atributos:   
 ID: *
 Description *
